@@ -4,8 +4,12 @@ import {DndContext} from '@dnd-kit/core';
 
 import { Droppable } from './Droppable';
 import { Draggable } from './Draggable';
+import { useAtom } from 'jotai';
+import { testAtom } from '@/store/data';
 
 export function MainComponent() {
+  const [test,setTest] = useAtom(testAtom)
+
   const containers = ['A', 'B', 'C'];
   const [parent, setParent] = useState(null);
   const draggableMarkup = (
@@ -13,15 +17,21 @@ export function MainComponent() {
   );
 
   return (
-    <DndContext onDragEnd={handleDragEnd}>
-      {parent === null ? draggableMarkup : null}
+    <>
+      <h1>{test.text}</h1>
+      <button className="border-2" onClick={() => setTest((pre) => ({...pre, text: "hello john"}))}>
+        click me
+      </button>
+      <DndContext onDragEnd={handleDragEnd}>
+        {parent === null ? draggableMarkup : null}
 
-      {containers.map((id) => (
-        <Droppable key={id} id={id}>
-          {parent === id ? draggableMarkup : 'Drop here'}
-        </Droppable>
-      ))}
-    </DndContext>
+        {containers.map((id) => (
+          <Droppable key={id} id={id}>
+            {parent === id ? draggableMarkup : 'Drop here'}
+          </Droppable>
+        ))}
+      </DndContext>
+    </>
   );
 
   function handleDragEnd(event) {
